@@ -1,0 +1,5 @@
+# Hvor mye vaffelrøre du vil lage.
+a = float(input("Hvor mange liter vaffelrøre vil du lage?: "))
+b = a * 4
+# Hvor mye mel du trenger
+print("Du trenger", str(b), " dl mel. ")

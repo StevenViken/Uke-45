@@ -8,7 +8,7 @@ def main():
     # Initialize all imported pygame modules
     pygame.init()
     # Set the width and height
-    screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     # Set current window caption
     pygame.display.set_caption("PUCMEN")
     # Loop until the user clicks the close button.

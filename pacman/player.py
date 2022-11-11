@@ -21,7 +21,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x,y)
         # Load animation
-        img = pygame.image.load("walk.png").convert()
+        # Lager animasjonen men nå med mitt eget pacman bilde
+        img = pygame.image.load("walk2.png").convert()
         # Create the animations objects
         self.move_right_animation = Animation(img,32,32)
         self.move_left_animation = Animation(pygame.transform.flip(img,True,False),32,32)

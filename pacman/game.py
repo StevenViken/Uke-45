@@ -27,7 +27,8 @@ class Game(object):
         # Bonus hastigheten til pacman
         self.speed = 0
         # Create the player
-        self.player = Player(32,128,"player.png")
+        # Lager en player med mitt eget pacman bilde
+        self.player = Player(32,128,"player2.png")
         # Create the blocks that will set the paths where the player can go
         self.horizontal_blocks = pygame.sprite.Group()
         self.vertical_blocks = pygame.sprite.Group()
@@ -35,6 +36,8 @@ class Game(object):
         self.dots_group = pygame.sprite.Group()
         # Lager en ny gruppe for power ups
         self.powerUp = pygame.sprite.Group()
+        self.fruit = pygame.sprite.Group()
+        self.coin = pygame.sprite.Group()
         # Set the enviroment:
         for i,row in enumerate(enviroment()):
             for j,item in enumerate(row):
@@ -44,18 +47,21 @@ class Game(object):
                     self.vertical_blocks.add(Block(j*32+8,i*32+8,BLACK,16,16))
         # Create the enemies
         self.enemies = pygame.sprite.Group()
-        # self.enemies.add(Slime(288,96,0,2))
-        # self.enemies.add(Slime(288,320,0,-2))
-        # self.enemies.add(Slime(544,128,0,2))
-        # self.enemies.add(Slime(32,224,0,2))
-        # self.enemies.add(Slime(160,64,2,0))
-        self.enemies.add(Slime(448,64,-2,0))
-        self.enemies.add(Slime(640,448,2,0))
-        self.enemies.add(Slime(448,320,2,0))
-        # Add the dots inside the game
+        # self.enemies.add(Slime(288,96,0,7))
+        # self.enemies.add(Slime(288,320,0,-7))
+        # self.enemies.add(Slime(544,128,0,7))
+        # self.enemies.add(Slime(32,224,0,7))
+        # self.enemies.add(Slime(160,64,7,0))
+        self.enemies.add(Slime(448,64,-7,0))
+        self.enemies.add(Slime(640,448,7,0))
+        self.enemies.add(Slime(448,320,7,0))
         # Max mengde power ups som er i spillet
         maxPowerUps = 5
         currentPowerUps = 0
+        maxFruits = 5
+        currentFruits = 0
+        maxCoins = 5
+        currentCoins = 0
         for i, row in enumerate(enviroment()):
             for j, item in enumerate(row):
                 if item != 0:
@@ -65,7 +71,16 @@ class Game(object):
                         # Legger til en power up
                         self.powerUp.add(Ellipse(j*32+12,i*32+12,RED,16,16))
                         currentPowerUps +=1
+                    elif type == 2 and currentFruits < maxFruits:
+                        # Lager en frukt
+                        self.fruit.add(Ellipse(j*32+2,i*32+2,GREEN,28,28))
+                        currentFruits +=1
+                    elif type == 3 and currentCoins < maxCoins:
+                        # Lager en mynt
+                        self.fruit.add(Ellipse(j*32+12,i*32+12,(255,255,0),8,8))
+                        currentCoins +=1
                     else:
+                        # Add the dots inside the game
                         self.dots_group.add(Ellipse(j*32+12,i*32+12,WHITE,8,8))
 
         # Load the sound effects
@@ -127,6 +142,8 @@ class Game(object):
             self.player.update(self.horizontal_blocks,self.vertical_blocks)
             block_hit_list = pygame.sprite.spritecollide(self.player,self.dots_group,True)
             powerUpped = pygame.sprite.spritecollide(self.player,self.powerUp,True)
+            fruity = pygame.sprite.spritecollide(self.player,self.fruit,True)
+            coinPickup = pygame.sprite.spritecollide(self.player,self.coin,True)
             # When the block_hit_list contains one sprite that means that player hit a dot
             if len(block_hit_list) > 0:
                 # Here will be the sound effect
@@ -135,6 +152,11 @@ class Game(object):
             if len(powerUpped) > 0:
                 self.speed +=3
                 self.score += 5
+            # Hvis pacman spiser denne frukten får han mange poeng
+            if len(fruity) > 0:
+                self.score += 10
+            if len(coinPickup) > 0:
+                self.score += 15
             block_hit_list = pygame.sprite.spritecollide(self.player,self.enemies,True)
             if len(block_hit_list) > 0:
                 self.player.explosion = True
@@ -157,6 +179,8 @@ class Game(object):
             draw_enviroment(screen)
             self.dots_group.draw(screen)
             self.powerUp.draw(screen)
+            self.fruit.draw(screen)
+            self.coin.draw(screen)
             self.enemies.draw(screen)
             screen.blit(self.player.image,self.player.rect)
             #screen.blit(text, (30, 650))

@@ -44,7 +44,9 @@ class Slime(pygame.sprite.Sprite):
         self.change_x = change_x
         self.change_y = change_y
         # Load image
-        self.image = pygame.image.load("slime.png").convert_alpha()
+        # Denne koden velger en tilfeldig enemy fil for å få tilfeldige farger
+        cactusColor = random.randint(1,3)
+        self.image = pygame.image.load("cactus" + str(cactusColor) + ".png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.topleft = (x,y)
  
